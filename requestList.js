@@ -1,6 +1,8 @@
 (function() {
 	var showListBtn = document.getElementById("showRequestsBtn");
 	var requestListBody = document.getElementById("requestListBody");
+	var filter = document.getElementById("filter");
+	var errorsOnly = document.getElementById("errorsOnly");
 
 	var listeners = [];
 
@@ -13,7 +15,14 @@
 		// console.log(har);
 		var requests = har.entries;
 		clearTable();
-		requests.forEach(drawRow);
+		var urlFilter = filter.value;
+		var errorFilter = errorsOnly.checked;
+		requests.forEach(function(request) {
+			if ((errorFilter && request.response.status < 400) || (urlFilter && !request.request.url.match(urlFilter))) {
+				return;
+			}
+			drawRow(request);
+		});
 	}
 
 	function clearTable() {

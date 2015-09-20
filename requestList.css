@@ -53,3 +53,7 @@
 .copyBtn:hover {
     background-color: rgba(60, 69, 129, 0.08);
 }
+
+#errorsOnly {
+    vertical-align: middle;
+}
