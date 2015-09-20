@@ -37,6 +37,10 @@
     line-height: 20px;
 }
 
+.requestTable .error {
+    color: red;
+}
+
 .copyBtn {
     /*image cource: http://www.entypo.com/*/
     background-image: url("./copy.svg");

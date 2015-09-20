@@ -36,6 +36,23 @@
 	function drawRow(request) {
 		var row = document.createElement("tr");
 		var copyNode = document.createElement("td");
+		var copyBtn = createCopyBtn(request);
+		copyNode.appendChild(copyBtn);
+		var statusNode = document.createElement("td");
+		statusNode.innerHTML = request.response.status;
+		if (request.response.status >= 400) {
+			statusNode.className = "error";
+		}
+		var urlNode = document.createElement("td");
+		urlNode.innerHTML = request.request.url;
+		requestListBody.appendChild(row);
+
+		row.appendChild(copyNode);
+		row.appendChild(statusNode);
+		row.appendChild(urlNode);
+	}
+
+	function createCopyBtn(request) {
 		var copyBtn = document.createElement("button");
 		copyBtn.title = "Copy";
 		copyBtn.className = "copyBtn";
@@ -45,16 +62,7 @@
 			button: copyBtn,
 			listener: listener
 		});
-		copyNode.appendChild(copyBtn);
-		var statusNode = document.createElement("td");
-		statusNode.innerHTML = request.response.status;
-		var urlNode = document.createElement("td");
-		urlNode.innerHTML = request.request.url;
-		requestListBody.appendChild(row);
-
-		row.appendChild(copyNode);
-		row.appendChild(statusNode);
-		row.appendChild(urlNode);
+		return copyBtn;
 	}
 
 	function copyRequest(request) {
