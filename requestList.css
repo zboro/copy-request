@@ -1,0 +1,55 @@
+.requestTable th {
+    text-align: left;
+}
+
+.requestTable {
+    margin-top: 5px;
+    border-spacing: 0;
+}
+
+.requestTable {
+    border-top: 1px solid #e1e1e1;
+    border-bottom: 1px solid #e1e1e1;
+    border-right: 1px solid #e1e1e1;
+}
+
+.requestTable th {
+    border-bottom: 1px solid #e1e1e1;
+}
+
+.requestTable th,
+.requestTable td {
+    border-left: 1px solid #e1e1e1;
+    padding-left: 4px;
+    padding-right: 3px;
+}
+
+.requestTable tr:nth-child(even) {
+    background: #eee;
+}
+
+.requestTable td:last-child {
+    display: inline-block;
+    width: 1000px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    line-height: 20px;
+}
+
+.copyBtn {
+    /*image cource: http://www.entypo.com/*/
+    background-image: url("./copy.svg");
+    background-image: url("./copy.svg");
+    background-repeat: no-repeat;
+    background-color: transparent;
+    background-size: 19px 20px;
+    background-position: 7px;
+    height: 20px;
+    width: 31px;
+    border: 0;
+}
+
+.copyBtn:hover {
+    background-color: rgba(60, 69, 129, 0.08);
+}
