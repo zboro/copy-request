@@ -43,13 +43,16 @@
 		if (request.response.status >= 400) {
 			statusNode.className = "error";
 		}
+		var methodNode = document.createElement("td");
+		methodNode.innerHTML = request.request.method;
 		var urlNode = document.createElement("td");
 		urlNode.innerHTML = request.request.url;
-		requestListBody.appendChild(row);
 
 		row.appendChild(copyNode);
 		row.appendChild(statusNode);
+		row.appendChild(methodNode);
 		row.appendChild(urlNode);
+		requestListBody.appendChild(row);
 	}
 
 	function createCopyBtn(request) {
