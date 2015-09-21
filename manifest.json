@@ -5,6 +5,7 @@
     "devtools_page": "index.html",
     "manifest_version": 2,
     "permissions": [
-        "clipboardWrite"
+        "clipboardWrite",
+        "storage"
     ]
 }

@@ -7,10 +7,32 @@
 	var listeners = [];
 
 	showListBtn.addEventListener("click", reload);
-	errorsOnly.addEventListener("click", reload);
-	filter.addEventListener("change", reload);
+	errorsOnly.addEventListener("click", function() {
+		chrome.storage.local.set({
+			errorsOnly: errorsOnly.checked
+		});
+		reload();
+	});
 
+	filter.addEventListener("change", function() {
+		chrome.storage.local.set({
+			filter: filter.value
+		});
+		reload();
+	});
+
+	loadSettings();
 	reload();
+
+	function loadSettings() {
+		chrome.storage.local.get([
+			"filter",
+			"errorsOnly"
+		], function(settings) {
+			filter.value = settings.filter || "";
+			errorsOnly.checked = !!settings.errorsOnly;
+		});
+	}
 
 	function reload() {
 		chrome.devtools.network.getHAR(displayRequests);
