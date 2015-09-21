@@ -6,10 +6,15 @@
 
 	var listeners = [];
 
-	showListBtn.addEventListener("click", function() {
+	showListBtn.addEventListener("click", reload);
+	errorsOnly.addEventListener("click", reload);
+	filter.addEventListener("change", reload);
+
+	reload();
+
+	function reload() {
 		chrome.devtools.network.getHAR(displayRequests);
-	});
-	chrome.devtools.network.getHAR(displayRequests);
+	}
 
 	function displayRequests(har) {
 		// console.log(har);
