@@ -23,6 +23,7 @@
 
 	loadSettings();
 	reload();
+	setInterval(reload, 1000);
 
 	function loadSettings() {
 		chrome.storage.local.get([
