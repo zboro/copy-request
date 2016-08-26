@@ -5,6 +5,7 @@
 	var errorsOnly = document.getElementById("errorsOnly");
 
 	var listeners = [];
+	var previousRequest = null;
 
 	showListBtn.addEventListener("click", reload);
 	errorsOnly.addEventListener("click", function() {
@@ -96,8 +97,12 @@
 		return copyBtn;
 	}
 
-	function copyRequest(request) {
+	function copyRequest(request, evt) {
 		formatRequest(request, function(stringToCopy) {
+			if (evt.ctrlKey) {
+				stringToCopy = [previousRequest, stringToCopy].join("\n\n\n");
+			}
+			previousRequest = stringToCopy;
 			copyToClipboard(stringToCopy);
 		});
 	}
