@@ -20,7 +20,7 @@
             const matchesFilter = !urlFilter || request.request.url.match(urlFilter);
             return matchesFilter && request.request.method === 'GET' &&  isJson(request);
         }).map((request, index) => {
-            indexFile += `cy.route("${getUrl(request)}", "fixture:${name}/${index}.json");\n`;
+            indexFile += `    cy.route('${getUrl(request)}', 'fixture:${name}/${index}.json');\n`;
             return saveResponseBody(request, index, mockFolder);
         });
 
@@ -59,9 +59,7 @@
     }
 
     function getIndexFileHeader() {
-        return `export function startMocks() {
-            cy.server();
-        `;
+        return `export function startMocks(options) {\n    cy.server(options);\n`;
     }
 
     function getIndexFileFooter() {
