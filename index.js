@@ -1,4 +1,4 @@
-chrome.devtools.panels.create("Copy request",
+chrome.devtools.panels.create("Cypress mocks",
     null,
     "requestList.html"
 );
