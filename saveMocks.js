@@ -42,11 +42,11 @@
     }
 
     function isJson(request) {
-        const contentTypeHeader = request.response.headers.find(header => header.name === 'content-type');
+        const contentTypeHeader = request.response.headers.find(header => header.name.toLowerCase() === 'content-type');
         if (!contentTypeHeader) {
             return false;
         }
-        return contentTypeHeader.value.indexOf('application/json') !== -1;
+        return contentTypeHeader.value.includes('application/json') || contentTypeHeader.value.endsWith('+json');
     }
 
     function saveResponseBody(request, index, mockFolder) {
