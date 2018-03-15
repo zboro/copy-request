@@ -59,7 +59,7 @@
     }
 
     function getIndexFileHeader() {
-        return `export function startMocks(options) {\n    cy.server(options);\n`;
+        return `export function startMocks(options = {}) {\n    cy.server(options);\n`;
     }
 
     function getIndexFileFooter() {
