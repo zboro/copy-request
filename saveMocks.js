@@ -1,44 +1,47 @@
-(function() {
-    var saveMocksBtn = document.getElementById('saveMocksBtn');
-    var filter = document.getElementById('filter');
+function saveMocks() {
+    const saveMocksBtn = document.getElementById('saveMocksBtn');
+    const filter = document.getElementById('filter');
 
     saveMocksBtn.addEventListener('click', () => {
-        chrome.devtools.network.getHAR(saveMocks);
+        chrome.devtools.network.getHAR(onSaveMocksBtnClick);
     });
 
-    function saveMocks(har) {
+    function onSaveMocksBtnClick(har) {
         const zip = new JSZip();
         const now = new Date();
         const name = prompt('Mock name') || `mocks-${now.toISOString().replace(/[.:-]/g, '')}`;
-        const mockFolder = zip.folder(name)
+        const mocksFolderName = 'mocks';
+
+        const rootFolder = zip.folder(name);
+        const mocksFolder = rootFolder.folder(mocksFolderName);
 
         let indexFile = getIndexFileHeader();
 
-        var requests = har.entries;
-        var urlFilter = filter.value;
+        const requests = har.entries;
+        const urlFilter = filter.value;
         const mockFilePromises = requests.filter((request) => {
             const matchesFilter = !urlFilter || request.request.url.match(urlFilter);
-            return matchesFilter && request.request.method === 'GET' &&  isJson(request);
+            return matchesFilter && isSupportedMethod(request) && isJson(request);
         }).map((request, index) => {
-            indexFile += `    cy.route('${getUrl(request)}', 'fixture:${name}/${index}.json');\n`;
-            return saveResponseBody(request, index, mockFolder);
+            indexFile += `    cy.route('${request.request.method}', '${getUrl(request)}', 'fixture:${name}/${mocksFolderName}/${index}.json');\n`;
+            return saveResponseBody(request, index, mocksFolder);
         });
 
         indexFile += getIndexFileFooter();
-        mockFolder.file('index.js', indexFile);
+        rootFolder.file('index.js', indexFile);
 
         Promise.all(mockFilePromises)
-        .then(() => {
-            return zip.generateAsync({
-                type: 'string'
-            })
-        })
-        .then((content) => {
-            chrome.downloads.download({
-                url: 'data:application/zip;base64,' + btoa(content),
-                filename: `${name}.zip`
+            .then(() => (
+                zip.generateAsync({
+                    type: 'string',
+                })
+            ))
+            .then((content) => {
+                chrome.downloads.download({
+                    url: `data:application/zip;base64,${btoa(content)}`,
+                    filename: `${name}.zip`,
+                });
             });
-        });
     }
 
     function isJson(request) {
@@ -49,9 +52,13 @@
         return contentTypeHeader.value.includes('application/json') || contentTypeHeader.value.endsWith('+json');
     }
 
+    function isSupportedMethod(request) {
+        return ['GET', 'PUT', 'POST', 'DEL', 'PATCH'].includes(request.request.method);
+    }
+
     function saveResponseBody(request, index, mockFolder) {
         return new Promise((resolve) => {
-            request.getContent(function(content) {
+            request.getContent((content) => {
                 mockFolder.file(`${index}.json`, content);
                 resolve();
             });
@@ -59,7 +66,7 @@
     }
 
     function getIndexFileHeader() {
-        return `export function startMocks(options) {\n    cy.server(options);\n`;
+        return 'export function startMocks(options = {}) {\n    cy.server(options);\n';
     }
 
     function getIndexFileFooter() {
@@ -69,4 +76,6 @@
     function getUrl(request) {
         return request.request.url.replace(/https:\/\/.*?\//, '**/');
     }
-})();
+}
+
+saveMocks();
