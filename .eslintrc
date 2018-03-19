@@ -1,16 +1,30 @@
 {
+	"extends": "airbnb-base",
 	"env": {
 		"browser": true
 	},
 	"globals": {
-		"chrome": true
+		"chrome": true,
+		"JSZip": true,
 	},
 	"parserOptions": {
 		"ecmaVersion": 6
 	},
 	"rules": {
-		"strict": 0,
+		"no-alert": 0,
 		"no-use-before-define": 0,
-		"no-console": 1
+		"indent": ["error", 4, {
+            "SwitchCase": 1,
+            "VariableDeclarator": 1,
+            "outerIIFEBody": 1,
+            "FunctionDeclaration": {
+                "parameters": 1,
+                "body": 1
+            },
+            "FunctionExpression": {
+                "parameters": 1,
+                "body": 1
+            }
+        }]
 	}
 }
