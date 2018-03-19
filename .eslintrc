@@ -5,7 +5,7 @@
 	},
 	"globals": {
 		"chrome": true,
-		"JSZip": true,
+		"JSZip": true
 	},
 	"parserOptions": {
 		"ecmaVersion": 6
