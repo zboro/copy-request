@@ -70,7 +70,7 @@ function saveMocks() {
     }
 
     function getIndexFileFooter() {
-        return '}';
+        return '}\n';
     }
 
     function getUrl(request) {

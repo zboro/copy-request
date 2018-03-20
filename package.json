@@ -1,0 +1,25 @@
+{
+  "name": "cypress-mocks",
+  "version": "1.0.0",
+  "description": "\"Plugin for Chrome dev tools. Adds new panel which lists network requests and allows to create cypress mocks.\"",
+  "main": "index.js",
+  "scripts": {
+    "lint": "./node_modules/eslint/bin/eslint.js ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.beeone.at:zboro/cypress-mocks.git"
+  },
+  "keywords": [
+    "cypress",
+    "chrome",
+    "plugin"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^4.19.0",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.9.0"
+  }
+}
