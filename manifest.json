@@ -7,14 +7,6 @@
     "permissions": [
         "clipboardWrite",
         "storage",
-        {
-            "fileSystem": [
-                "write",
-                "retainEntries",
-                "directory",
-                "requestFileSystem"
-            ]
-        },
         "downloads"
     ]
 }
