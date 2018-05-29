@@ -10,25 +10,8 @@ function saveMocks() {
         const zip = new JSZip();
         const now = new Date();
         const name = prompt('Mock name') || `mocks-${now.toISOString().replace(/[.:-]/g, '')}`;
-        const mocksFolderName = 'mocks';
 
-        const rootFolder = zip.folder(name);
-        const mocksFolder = rootFolder.folder(mocksFolderName);
-
-        let indexFile = getIndexFileHeader();
-
-        const requests = har.entries;
-        const urlFilter = filter.value;
-        const mockFilePromises = requests.filter((request) => {
-            const matchesFilter = !urlFilter || request.request.url.match(urlFilter);
-            return matchesFilter && isSupportedMethod(request) && isJson(request);
-        }).map((request, index) => {
-            indexFile += `    cy.route('${request.request.method}', '${getUrl(request)}', 'fixture:${name}/${mocksFolderName}/${index}.json');\n`;
-            return saveResponseBody(request, index, mocksFolder);
-        });
-
-        indexFile += getIndexFileFooter();
-        rootFolder.file('index.js', indexFile);
+        const mockFilePromises = saveMocksToFolder(har, filter.value, zip, name);
 
         Promise.all(mockFilePromises)
             .then(() => (
@@ -74,7 +57,47 @@ function saveMocks() {
     }
 
     function getUrl(request) {
-        return request.request.url.replace(/https:\/\/.*?\//, '**/');
+        return clearVariableQueryParams(request.request.url.replace(/https:\/\/.*?\//, '**/'));
+    }
+
+    function clearVariableQueryParams(url) {
+        const variableParams = ['_', 'retinaResolution'];
+        let clearedUrl = url;
+        variableParams.forEach((param) => {
+            clearedUrl = clearedUrl.replace(new RegExp(`${param}=\\w+`), `${param}=*`);
+        });
+        return clearedUrl;
+    }
+
+    function saveMocksToFolder(har, urlFilter, zip, name) {
+        const rootFolder = zip.folder(name);
+        const mocksFolderName = 'mocks';
+        const mocksFolder = rootFolder.folder(mocksFolderName);
+
+        let indexFile = getIndexFileHeader();
+
+        const requests = har.entries;
+        const mockFilePromises = requests.filter(shouldMockResponse(urlFilter))
+            .map((request, index) => {
+                indexFile += getCyRouteDefinition(request, name, mocksFolderName, index);
+                return saveResponseBody(request, index, mocksFolder);
+            });
+
+        indexFile += getIndexFileFooter();
+        rootFolder.file('index.js', indexFile);
+
+        return mockFilePromises;
+    }
+
+    function shouldMockResponse(urlFilter) {
+        return (request) => {
+            const matchesFilter = !urlFilter || request.request.url.match(urlFilter);
+            return matchesFilter && isSupportedMethod(request) && isJson(request);
+        };
+    }
+
+    function getCyRouteDefinition(request, name, mocksFolderName, index) {
+        return `    cy.route('${request.request.method}', '${getUrl(request)}', 'fixture:${name}/${mocksFolderName}/${index}.json');\n`;
     }
 }
 
